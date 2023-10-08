@@ -1,4 +1,3 @@
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -14,7 +13,6 @@ import java.sql.Statement;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -22,22 +20,26 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
 
 public class sqlGUI extends JFrame implements ActionListener {
-    JMenuBar menuBar = new JMenuBar();
-
+    JMenuBar menuBar = new JMenuBar();//menu
+    /**
+     * 
+     * @param connectionUrl - connectionUrl for DB
+     */
     public sqlGUI(String connectionUrl) {
         setTitle(connectionUrl);
         setSize(800, 600); // Set the size to 800x600
         setLocationRelativeTo(null); // Center the frame on the screen
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        createMenuBar();
+        createMenuBar(); //create menubar
         setVisible(true);
         setJMenuBar(menuBar); // sets menu bar to the JFrame menu bar.
 
     }
-
+    /**
+     * create open and close for menu and add action listener for each.
+     */
     private void createMenuBar() {
         JMenuItem item;
         JMenu fileMenu = new JMenu("File");
@@ -76,7 +78,12 @@ public class sqlGUI extends JFrame implements ActionListener {
         else
             JOptionPane.showMessageDialog(null, "Open File dialog canceled");
     }
-
+    /**
+     * 
+     * @param file pass in sql file.
+     * run each line in query and process it.
+     * display each part in Jframe.
+     */
     private void readSource(File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             StringBuilder sqlCommands = new StringBuilder();
@@ -114,7 +121,12 @@ public class sqlGUI extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(null, "Error reading file: " + e.getMessage());
         }
     }
-
+    /**
+     * 
+     * @param sqlCommands
+     * @param connectionUrl
+     * @return string of the query output.
+     */
     private String readQuery(String sqlCommands, String connectionUrl) {
         StringBuilder result = new StringBuilder();
 

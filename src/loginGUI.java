@@ -10,8 +10,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class loginGUI extends JFrame implements ActionListener {
-    private JTextField serverNameField, portNumberField, dbNameField, usernameField, passwordField;
-
+    private JTextField serverNameField, portNumberField, dbNameField, usernameField, passwordField; //Text Fields for input.
+    /**
+     * 
+     * loginGUI creates GUI for JTextField parameters and submission.
+     * 
+     */
     public loginGUI() {
         setTitle("JDBC Class Library");
         setSize(400, 300);
@@ -41,7 +45,12 @@ public class loginGUI extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }
-
+    /**
+     * 
+     * @param labelText - Name of text for submission.
+     * @param gbc - formatting for UI.
+     * @return JTextField type which returns Fields for parameters defined in the class.
+     */
     private JTextField addLabelAndTextField(String labelText, GridBagConstraints gbc) {
         gbc.gridx = 0;
         JLabel label = new JLabel(labelText);
@@ -69,19 +78,23 @@ public class loginGUI extends JFrame implements ActionListener {
         // Construct the connection URL with user input
         String connectionUrl = "jdbc:sqlserver://" + serverName + ":" + portNumber + ";databaseName=" + dbName
                 + ";user=" + username + ";password=" + password + ";";        
-        if(connectedToDatabase(connectionUrl)){
-            App.connectURL(connectionUrl);
+        if(connectedToDatabase(connectionUrl)){ //if valid, connect.
+            App.connectURL(connectionUrl); //from App class.
             
         }
         else{
-            showErrorMessage("Failed to Connect to Database.");
+            showErrorMessage("Failed to Connect to Database."); // else show error message.
         }
     }
 
+    /**
+     * 
+     * @param connectionUrl - connection for DB.
+     * @return boolean type if connection is valid and false if there are errors in SQL connection.
+     */
     private boolean connectedToDatabase(String connectionUrl) {
         try (java.sql.Connection con = java.sql.DriverManager.getConnection(connectionUrl);
              java.sql.Statement stmt = con.createStatement()) {
-            // You can perform SQL operations here
             return true;
         } catch (java.sql.SQLException e) {
             e.printStackTrace();
@@ -89,14 +102,17 @@ public class loginGUI extends JFrame implements ActionListener {
             return false;
         }
     }
-    // Method to show an error message
+    /**
+     * 
+     * @param message - error message. 
+     */
     private void showErrorMessage(String message) {
         JFrame errorFrame = new JFrame("Error");
         JOptionPane.showMessageDialog(errorFrame, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
 
-    // Getters for user input
+    // List of Getters
     public String getServerName() {
         return serverNameField.getText();
     }
