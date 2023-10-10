@@ -77,7 +77,7 @@ public class loginGUI extends JFrame implements ActionListener {
         
         // Construct the connection URL with user input
         String connectionUrl = "jdbc:sqlserver://" + serverName + ":" + portNumber + ";databaseName=" + dbName
-                + ";user=" + username + ";password=" + password + ";";        
+                + ";user=" + username + ";password=" + password + ";" + "encrypt=true;trustServerCertificate=true";        
         if(connectedToDatabase(connectionUrl)){ //if valid, connect.
             App.connectURL(connectionUrl); //from App class.
             
