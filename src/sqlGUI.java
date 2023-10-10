@@ -133,7 +133,7 @@ public class sqlGUI extends JFrame implements ActionListener {
         try (Connection con = DriverManager.getConnection(connectionUrl);
              Statement stmt = con.createStatement()) {
     
-            String[] queries = sqlCommands.split(";");
+            String[] queries = sqlCommands.split(";"); //User must know to use ; only at the end of queries.
     
             for (String query : queries) {
                 query = query.trim();
@@ -144,20 +144,27 @@ public class sqlGUI extends JFrame implements ActionListener {
     
                         // Append column names to the result string
                         for (int i = 1; i <= columnCount; i++) {
-                            result.append(metaData.getColumnName(i)).append("\t");
+                            result.append(String.format("| %-20s ", metaData.getColumnName(i)));
                         }
-                        result.append("\n"); // Move to the next line after appending column names
-    
+                        result.append("|\n");
+
+                        // Append a separator line
+                        for (int i = 1; i <= columnCount; i++) {
+                            result.append("+---------------------");
+                        }
+                        result.append("+\n");
+
                         // Append data to the result string
                         while (rs.next()) {
                             for (int i = 1; i <= columnCount; i++) {
-                                result.append(rs.getString(i)).append("\t");
+                                result.append(String.format("| %-20s ", rs.getString(i)));
                             }
-                            result.append("\n"); // Move to the next line after appending data
+                            result.append("|\n");
                         }
-    
-                        // Add a separator between queries
-                        result.append("---------------------------\n");
+
+                    // Add a separator between queries
+                    result.append("+---------------------");
+                    result.append("\n");
                     } catch (SQLException e) {
                         // Log the error or display a user-friendly error message
                         e.printStackTrace();
