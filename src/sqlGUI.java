@@ -130,31 +130,50 @@ public class sqlGUI extends JFrame implements ActionListener {
     private String readQuery(String sqlCommands, String connectionUrl) {
         StringBuilder result = new StringBuilder();
 
-        try (Connection con = DriverManager.getConnection(connectionUrl); Statement stmt = con.createStatement();) {
-            ResultSet rs = stmt.executeQuery(sqlCommands);
-
-            // Get ResultSetMetaData to obtain information about the columns
-            ResultSetMetaData metaData = rs.getMetaData();
-            int columnCount = metaData.getColumnCount();
-
-            // Append column names to the result string
-            for (int i = 1; i <= columnCount; i++) {
-                result.append(metaData.getColumnName(i)).append("\t");
-            }
-            result.append("\n"); // Move to the next line after appending column names
-
-            // Append data to the result string
-            while (rs.next()) {
-                for (int i = 1; i <= columnCount; i++) {
-                    result.append(rs.getString(i)).append("\t");
+        try (Connection con = DriverManager.getConnection(connectionUrl);
+             Statement stmt = con.createStatement()) {
+    
+            String[] queries = sqlCommands.split(";");
+    
+            for (String query : queries) {
+                query = query.trim();
+                if (!query.isEmpty()) {
+                    try (ResultSet rs = stmt.executeQuery(query)) {
+                        ResultSetMetaData metaData = rs.getMetaData();
+                        int columnCount = metaData.getColumnCount();
+    
+                        // Append column names to the result string
+                        for (int i = 1; i <= columnCount; i++) {
+                            result.append(metaData.getColumnName(i)).append("\t");
+                        }
+                        result.append("\n"); // Move to the next line after appending column names
+    
+                        // Append data to the result string
+                        while (rs.next()) {
+                            for (int i = 1; i <= columnCount; i++) {
+                                result.append(rs.getString(i)).append("\t");
+                            }
+                            result.append("\n"); // Move to the next line after appending data
+                        }
+    
+                        // Add a separator between queries
+                        result.append("---------------------------\n");
+                    } catch (SQLException e) {
+                        // Log the error or display a user-friendly error message
+                        e.printStackTrace();
+                        result.append("Error executing query: ").append(e.getMessage());
+                        result.append("\n");
+                    }
                 }
-                result.append("\n"); // Move to the next line after appending data
             }
-
+    
         } catch (SQLException e) {
+            // Log the error or display a user-friendly error message
             e.printStackTrace();
+            result.append("Error establishing connection: ").append(e.getMessage());
+            result.append("\n");
         }
-
+    
         return result.toString();
     }
 
